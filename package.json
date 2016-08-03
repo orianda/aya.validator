@@ -1,25 +1,33 @@
 {
   "name": "aya.validator",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "AYA validator",
   "main": "src/index.js",
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://paan@bitbucket.org/paan/aya.validator.git"
-  },
   "author": "paan <paan@paan.de>",
   "license": "GNU",
-  "homepage": "https://bitbucket.org/paan/aya.validator#readme",
   "dependencies": {
-    "lodash": "^4.1.0",
-    "validator": "https://paan@bitbucket.org/paan/aya.validator.git"
+    "lodash": "^4.1.0"
   },
   "devDependencies": {
     "chai": "^3.4.1",
     "chai-as-promised": "^5.1.0",
     "mocha": "^2.3.4"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [
+    "validation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orianda/aya.validator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/orianda/aya.validator/issues"
+  },
+  "homepage": "https://github.com/orianda/aya.validator#readme"
 }
