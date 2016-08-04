@@ -10,7 +10,7 @@ describe('file', function () {
         file = {
             path: 'path',
             name: 'name',
-            mime: 'image/jpeg',
+            type: 'image/jpeg',
             size: 0
         };
 
@@ -75,7 +75,7 @@ describe('file', function () {
                 value: file,
                 valid: false,
                 error: {
-                    'mime': 'pattern'
+                    'type': 'pattern'
                 }
             });
         });

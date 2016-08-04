@@ -79,7 +79,7 @@ module.exports = function (props) {
                 trim: true,
                 minLength: 1
             },
-            mime: {
+            type: {
                 type: 'string',
                 required: true,
                 trim: true,

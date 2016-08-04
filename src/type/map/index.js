@@ -7,7 +7,6 @@ var FSM = require('../../fsm'),
 /**
  * Create fsm for number type
  * @param {Object} props
- * @param {boolean} [props.strict]
  * @param {Object} props.node
  * @param {boolean} [props.strict=false]
  * @returns {FSM}
