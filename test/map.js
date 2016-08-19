@@ -91,7 +91,9 @@ describe('map', function () {
                         confg = _.extend({strict: false}, config),
                         issue = validate(confg)(value);
                     expect(issue).to.deep.equal({
-                        value: {},
+                        value: {
+                            unknown: 'unknown'
+                        },
                         valid: true,
                         error: undefined
                     });
@@ -107,7 +109,9 @@ describe('map', function () {
                 var value = {any: 'any'},
                     issue = validate(config)(value);
                 expect(issue).to.deep.equal({
-                    value: value,
+                    value: {
+                        any: 'any'
+                    },
                     valid: true,
                     error: undefined
                 });

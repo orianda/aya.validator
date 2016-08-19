@@ -37,18 +37,16 @@ module.exports = function (node, strict, pass, fail) {
             return fsm.run(undefined);
         });
 
-        if (strict) {
-            unknown = _.omitBy(issue.value, function (value, key) {
-                return node[key];
-            });
-            unknown = _.mapValues(unknown, function (value) {
-                return {
-                    value: value,
-                    valid: false,
-                    error: 'unknown'
-                };
-            });
-        }
+        unknown = _.omitBy(issue.value, function (value, key) {
+            return node[key];
+        });
+        unknown = _.mapValues(unknown, function (value) {
+            return {
+                value: value,
+                valid: !strict,
+                error: !strict ? undefined : 'unknown'
+            };
+        });
 
         total = _.extend(match, unknown, missing);
         issue.value = _.mapValues(total, 'value');
