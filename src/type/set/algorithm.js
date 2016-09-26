@@ -1,67 +1,6 @@
 'use strict';
 
-/**
- * Convert decimal to binary
- * @param {number} dec
- * @returns {string}
- */
-function dec2bin(dec) {
-    return dec.toString(2);
-}
-
-/**
- * Convert binary to decimal
- * @param {string} bin
- * @returns {Number}
- */
-function bin2dec(bin) {
-    return parseInt(bin, 2);
-}
-
-/**
- * Split string into chunks
- * @param {string} string
- * @param {number} length
- * @returns {string[]}
- */
-function chunk(string, length) {
-    var pattern = new RegExp('.{' + length + '}', 'g');
-    return string.match(pattern);
-}
-
-/**
- * Padding string
- * @param {string} string
- * @param {number} length
- * @param {string} prefix
- * @returns {string}
- */
-function pad(string, length, prefix) {
-    length = length - string.length;
-    return length > 0 ? prefix.repeat(length) + string : string;
-}
-
-/**
- * Does chunks share 1s in the same position?
- * @param {string[]} chunks
- * @returns {boolean}
- */
-function avoid(chunks) {
-    var sum = 0;
-    return chunks.every(function (chunk) {
-        var dec = bin2dec(chunk);
-        sum += dec;
-        return (sum & dec) === dec;
-    });
-}
-
-/**
- * Null returner
- * @returns {null}
- */
-function none() {
-    return null;
-}
+var _ = require('lodash');
 
 /**
  * Get combination factory
@@ -70,39 +9,75 @@ function none() {
  * @returns {Function}
  */
 module.exports = function (slotAmount, itemAmount) {
-    var step, stop, dec;
-
-    slotAmount = Math.max(0, slotAmount);
-    itemAmount = Math.max(0, itemAmount);
-    if (!slotAmount || !itemAmount) {
-        return none;
-    }
-
-    step = bin2dec('1'.repeat(itemAmount));
-    stop = bin2dec('1'.repeat(itemAmount) + '0'.repeat(slotAmount * itemAmount - itemAmount));
-    dec = step;
+    var length = slotAmount * itemAmount,
+        output = new Array(length),
+        tick = -1;
 
     /**
-     * Get next combination
-     * @returns {number[][]|null}
+     * Is current index already taken?
+     * @param {number} index
+     * @returns {boolean}
+     */
+    function busy(index) {
+        for (let i = index % itemAmount; i < length; i += itemAmount) {
+            if (output[i]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Format output
+     * @param {number[]} combination
+     * @returns {number[][]}
+     */
+    function format(combination) {
+        return _.chunk(combination, itemAmount);
+    }
+
+    /**
+     * Initialize
+     */
+    for (let i = 0; i < length; i++) {
+        output[i] = i < itemAmount ? 1 : 0;
+    }
+
+    /**
+     * Code generator
+     * @returns {number[]}
      */
     return function next() {
-        var bin, chunks;
+        var sum;
 
-        if (stop < dec) {
+        if (tick === length) {
             return null;
         }
 
-        bin = dec2bin(dec);
-        bin = pad(bin, slotAmount * itemAmount, '0');
-        bin = bin.split('').reverse().join('');
-        dec += step;
-        chunks = chunk(bin, itemAmount);
+        if (tick < 0) {
+            tick++;
+            return format(output, itemAmount);
+        }
 
-        if (!avoid(chunks)) {
+        if (output[tick] || busy(tick, itemAmount)) {
+            output[tick] = 0;
+            tick++;
             return next();
         }
 
-        return chunks.map(chunk => chunk.match(/./g).map(bit => parseInt(bit, 10)));
+        output[tick] = 1;
+        sum = itemAmount;
+        for (let i = tick; i < length; i++) {
+            sum -= output[i];
+        }
+        for (let i = 0, j = 0; i < sum; i++) {
+            while (busy(j, itemAmount)) {
+                j++;
+            }
+            output[j++] = 1;
+        }
+        tick = 0;
+
+        return format(output, itemAmount);
     };
 };
