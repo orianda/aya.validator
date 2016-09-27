@@ -13,12 +13,12 @@ var _ = require('lodash'),
  * @todo write test for multiple
  */
 module.exports = function validator(props) {
-    props = multiple(props);
     try {
         let name = props.type || 'any',
             fsm = validator.types[name](props);
         fsm.name = name;
-        fsm = negate(props, fsm);
+        fsm = props.multiple ? multiple(fsm) : fsm;
+        fsm = props.negate ? negate(fsm) : fsm;
         return fsm;
     } catch (error) {
         throw {
